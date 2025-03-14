@@ -6,6 +6,7 @@ function ItemsRow({ item, index, deleteItem, startEditing }) {
     <tr key={item.id} className="border-b">
       <td className="p-2">{index + 1}</td>
       <td className="p-2">{item.name}</td>
+      <td className="p-2">{item.category}</td>
       <td className="p-2">{item.date}</td>
       <td className="p-2 text-center">
         <button

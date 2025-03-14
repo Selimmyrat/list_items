@@ -7,10 +7,12 @@ import AddModal from "../components/AddModal";
 
 function Home() {
   const [items, setItems] = useState([]);
-  const [inputValue, setInputValue] = useState("");
+  const [nameValue, setNameValue] = useState("");
+  const [categoryValue, setCategoryValue] = useState("");
   const [isDuplicate, setIsDuplicate] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
-  const [editValue, setEditValue] = useState("");
+  const [editName, setEditName] = useState("");
+  const [editCategory, setEditCategory] = useState("");
   const [isAddingBtn, setIsAddingBtn] = useState(false);
   const [isAddingModal, setIsAddingModal] = useState(false);
 
@@ -21,7 +23,6 @@ function Home() {
       try {
         const response = await fetch(apiUrl);
         const data = await response.json();
-        console.log(data);
         setItems(data);
       } catch (error) {
         console.error("Error fetching data", error);
@@ -31,7 +32,7 @@ function Home() {
     fetchData();
   }, []);
 
-  function changeHandle(e) {
+  function changeHandleName(e) {
     const duplicateExists = items.some((item) => item.name === e.target.value);
 
     if (duplicateExists) {
@@ -40,16 +41,32 @@ function Home() {
       setIsDuplicate(false);
     }
 
-    setInputValue(e.target.value);
+    setNameValue(e.target.value);
+  }
+
+  function changeHandleCategory(e) {
+    const duplicateExists = items.some(
+      (item) => item.category === e.target.value
+    );
+
+    if (duplicateExists) {
+      setIsDuplicate(true);
+    } else {
+      setIsDuplicate(false);
+    }
+
+    setCategoryValue(e.target.value);
   }
 
   async function addHandle() {
-    if (inputValue.trim() === "" || isDuplicate) return;
+    if (nameValue.trim() === "" || categoryValue.trim() === "" || isDuplicate)
+      return;
 
     setIsAddingBtn(true);
     const nowDate = new Date().toISOString().split("T")[0];
     const newItem = {
-      name: inputValue,
+      name: nameValue,
+      category: categoryValue,
       date: nowDate,
     };
 
@@ -64,7 +81,8 @@ function Home() {
 
       const data = await response.json();
       setItems([...items, data]);
-      setInputValue("");
+      setNameValue("");
+      setCategoryValue("");
     } catch (error) {
       console.error("Error adding item", error);
     } finally {
@@ -86,13 +104,15 @@ function Home() {
 
   function startEditing(item) {
     setEditingItem(item);
-    setEditValue(item.name);
+    setEditName(item.name);
+    setEditCategory(item.category);
   }
 
   async function saveEdit() {
     const updatedItem = {
       ...editingItem,
-      name: editValue,
+      name: editName,
+      category: editCategory,
     };
 
     try {
@@ -135,6 +155,7 @@ function Home() {
             <tr>
               <th className="p-2 text-left">№</th>
               <th className="p-2 text-left">Name</th>
+              <th className="p-2 text-left">Category</th>
               <th className="p-2 text-left">Date</th>
               <th className="p-2 text-center">Actions</th>
             </tr>
@@ -156,17 +177,21 @@ function Home() {
       {editingItem !== null && (
         <EditModal
           setEditingItem={setEditingItem}
-          editValue={editValue}
-          setEditValue={setEditValue}
+          editName={editName}
+          setEditName={setEditName}
           saveEdit={saveEdit}
+          editCategory={editCategory}
+          setEditCategory={setEditCategory}
         />
       )}
       {isAddingModal && (
         <AddModal
           setIsAddingModal={setIsAddingModal}
           isDuplicate={isDuplicate}
-          inputValue={inputValue}
-          changeHandle={changeHandle}
+          inputValue={nameValue}
+          categoryValue={categoryValue}
+          changeHandleName={changeHandleName}
+          changeHandleCategory={changeHandleCategory}
           isAddingBtn={isAddingBtn}
           addHandle={addHandle}
         />

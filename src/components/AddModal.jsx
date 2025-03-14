@@ -1,32 +1,47 @@
 function AddModal({
   setIsAddingModal,
   isDuplicate,
-  inputValue,
-  changeHandle,
+  nameValue,
+  changeHandleName,
+  changeHandleCategory,
   isAddingBtn,
   addHandle,
+  categoryValue,
 }) {
   return (
     <div
-      onClick={() => setIsAddingModal(null)}
+      onMouseDown={() => setIsAddingModal(null)}
       className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
     >
       <div
-        onClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
         className="bg-white p-6 rounded-lg shadow-lg w-96"
       >
-        <h2 className="font-semibold mb-4 text-lg">Add Item</h2>
+        <h2 className="font-semibold mb-4 text-lg">Add Product</h2>
+        <h1>Product Name</h1>
         {isDuplicate && (
           <p className="text-red-600 font-semibold mb-2">
-            Not Dublicate Name!!!
+            Name or category dublicated
           </p>
         )}
         <input
           className="border p-2 w-full mb-4"
-          value={inputValue}
-          onChange={changeHandle}
+          value={nameValue}
+          onChange={changeHandleName}
           type="text"
           placeholder="Add Item"
+          required
+        />
+
+        <h1>Choose Category</h1>
+        
+        <input
+          className="border p-2 w-full mb-4"
+          value={categoryValue}
+          onChange={changeHandleCategory}
+          type="text"
+          placeholder="Add Category"
+          required
         />
 
         <div className="flex flex-row gap-2">
